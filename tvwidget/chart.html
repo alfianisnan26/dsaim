@@ -1,0 +1,76 @@
+<div class="tradingview-widget-container" style="height:100%;width:100%">
+  <div class="tradingview-widget-container__widget" style="height:calc(100% - 32px);width:100%"></div>
+</div>
+
+<script>
+  const params = new URLSearchParams(window.location.search);
+
+  // symbol param (required)
+  const symbol = params.get("symbol");
+
+  // theme param (default light)
+  const theme = params.get("theme") || "light";
+
+  // redirectUrl param (optional)
+  const largeChartUrl = params.get("redirectUrl") || "";
+
+  const allow_symbol_change = params.get("allowSymbolChange") || "false" === "true";
+  const calendar = params.get("calendar") || "false" === "true";
+  const details = params.get("details") || "true" === "true";
+  const hide_side_toolbar = params.get("hideSideToolbar") || "true" === "true";
+  const hide_top_toolbar = params.get("hideTopToolbar") || "false" === "true";
+  const hide_legend = params.get("hideLegend") || "false" === "true";
+  const hide_volume = params.get("hideVolume") || "false" === "true";
+  const hotlist = params.get("hotlist") || "false" === "true";
+  const interval = params.get("interval") || "D";
+  const locale = params.get("locale") || "id";
+  const save_image = params.get("saveImage") || "false" === "true";
+  const style = params.get("style") || "1";
+  const timezone = params.get("timezone") || "Asia/Jakarta";
+  let watchlist = params.getAll("watchlist") || [];
+  if (params.has("watchlists")) {
+    watchlist = params.get("watchlists").split(",").map(s => s.trim());
+  }
+  const withdateranges = params.get("withDateRanges") || "true" === "true";
+  let compareSymbols = params.getAll("compareSymbol") || [];
+  if (params.has("compareSymbols")) {
+    compareSymbols = params.get("compareSymbols").split(",").map(s => s.trim());
+  }
+
+  let studies = params.getAll("study") || [];
+  if (params.has("studies")) {
+    studies = params.get("studies").split(",").map(s => s.trim());
+  }
+
+
+  const config = {
+    allow_symbol_change,
+    calendar,
+    details,
+    hide_side_toolbar,
+    hide_top_toolbar,
+    hide_legend,
+    hide_volume,
+    hotlist,
+    interval,
+    locale,
+    save_image,
+    style,
+    symbol,
+    theme,
+    timezone,
+    watchlist,
+    withdateranges,
+    compareSymbols,
+    studies,
+    autosize: true,
+    largeChartUrl
+  };
+
+  const script = document.createElement("script");
+  script.src = "https://s3.tradingview.com/external-embedding/embed-widget-advanced-chart.js";
+  script.async = true;
+  script.innerHTML = JSON.stringify(config);
+
+  document.querySelector(".tradingview-widget-container__widget").appendChild(script);
+</script>

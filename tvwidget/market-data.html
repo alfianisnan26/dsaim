@@ -1,0 +1,44 @@
+<div class="tradingview-widget-container">
+  <div class="tradingview-widget-container__widget"></div>
+</div>
+
+<script>
+  const params = new URLSearchParams(window.location.search);
+
+  // support both ?symbol=IDX:BBCA&symbol=IDX:BBRI and ?symbols=IDX:BBCA,IDX:BBRI
+  let symbols = params.getAll("symbol");
+  if (params.has("symbols")) {
+    symbols = params.get("symbols").split(",").map(s => s.trim());
+  }
+
+  const widgetSymbols = symbols.map(sym => ({ name: sym }));
+
+  const colorTheme = params.get("theme") || "light";
+  const largeChartUrl = params.get("redirectUrl") || "";
+  const locale = params.get("locale") || "id";
+  const showSymbolLogo = params.get("showSymbolLogo") || "true" === "true";
+
+
+  const config = {
+    colorTheme,
+    locale,
+    largeChartUrl,
+    isTransparent: false,
+    showSymbolLogo,
+    width: "100%",
+    height: "100%",
+    symbolsGroups: [
+      {
+        name: "Portfolio",
+        symbols: widgetSymbols
+      }
+    ]
+  };
+
+  const script = document.createElement("script");
+  script.src = "https://s3.tradingview.com/external-embedding/embed-widget-market-quotes.js";
+  script.async = true;
+  script.innerHTML = JSON.stringify(config);
+
+  document.querySelector(".tradingview-widget-container__widget").appendChild(script);
+</script>

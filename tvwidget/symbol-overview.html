@@ -1,0 +1,60 @@
+<div class="tradingview-widget-container">
+  <div class="tradingview-widget-container__widget"></div>
+</div>
+
+<script>
+  const params = new URLSearchParams(window.location.search);
+
+  // support both ?symbol=IDX:BBCA&symbol=IDX:BBRI and ?symbols=IDX:BBCA,IDX:BBRI
+  let symbols = params.getAll("symbol");
+  if (params.has("symbols")) {
+    symbols = params.get("symbols").split(",").map(s => s.trim());
+  }
+
+  // Build TradingView symbols array format
+  const widgetSymbols = symbols.map(sym => {
+    const title = sym.includes(":") ? sym.split(":")[1] : sym;
+    return [title, `${sym}|1D`];
+   })
+
+   // colorTheme support with fallback
+  const colorTheme = params.get("colorTheme") || "light";
+
+  const largeChartUrl = params.get("redirectUrl") || "";
+
+  const locale = params.get("locale") || "id";
+
+  const chartOnly = params.get("chartOnly") || "false" === "true";
+
+  const changeMode = params.get("changeMode") || "price-and-percent";
+
+  const noTimeScale = params.get("noTimeScale") || "false" === "true";
+
+  const hideDateRanges = params.get("hideDateRanges") || "false" === "true";
+
+  const hideMarketStatus = params.get("hideMarketStatus") || "false" === "true";
+
+  const hideSymbolLogo = params.get("hideSymbolLogo") || "false" === "true";
+  // Create TradingView script
+  const script = document.createElement("script");
+  script.src = "https://s3.tradingview.com/external-embedding/embed-widget-symbol-overview.js";
+  script.async = true;
+  script.innerHTML = JSON.stringify({
+    colorTheme: colorTheme,
+    isTransparent: false,
+    locale,
+    chartOnly,
+    changeMode,
+    symbols: widgetSymbols,
+    autosize: true,
+    width: "100%",
+    height: "100%",
+    noTimeScale,
+    hideDateRanges,
+    hideMarketStatus,
+    hideSymbolLogo,
+    largeChartUrl,
+  });
+
+  document.querySelector(".tradingview-widget-container__widget").appendChild(script);
+</script>

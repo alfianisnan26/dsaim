@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Dynamic TradingView Widget</title>
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      width: 100%;
+    }
+    .tradingview-widget-container {
+      height: 100%;
+      width: 100%;
+    }
+    .tradingview-widget-container__widget {
+      height: 100%;
+      width: 100%;
+    }
+  </style>
+</head>
+<body>
+  <div class="tradingview-widget-container">
+    <div class="tradingview-widget-container__widget"></div>
+  </div>
+
+  <script>
+    const params = new URLSearchParams(window.location.search);
+
+    // required params
+    const src = params.get("src"); // widget script url
+    const asyncAttr = params.get("async") !== "false"; // default true
+    let payload = {};
+
+    try {
+      if (params.has("payload")) {
+        payload = JSON.parse(params.get("payload"));
+      }
+    } catch (e) {
+      console.error("Invalid payload JSON", e);
+    }
+
+    if (!src) {
+      console.error("Missing src parameter (widget script URL).");
+    } else {
+      const script = document.createElement("script");
+      script.src = src;
+      if (asyncAttr) script.async = true;
+      script.innerHTML = JSON.stringify(payload);
+
+      document.querySelector(".tradingview-widget-container__widget").appendChild(script);
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,44 @@
+<div class="tradingview-widget-container">
+  <div class="tradingview-widget-container__widget"></div>
+</div>
+
+<script>
+  const params = new URLSearchParams(window.location.search);
+
+  // single symbol (no default)
+  const symbol = params.get("symbol") || "";
+
+  // theme param -> colorTheme (default light)
+  const colorTheme = params.get("theme") || "light";
+
+  // redirectUrl param -> largeChartUrl (no default)
+  const largeChartUrl = params.get("redirectUrl") || "";
+
+  const chartOnly = params.get("chartOnly") || "false" === "true";
+
+  const dateRange = params.get("dateRange") || "1D";
+
+  const noTimeScale = params.get("noTimeScale") || "false" === "true";
+
+  const locale = params.get("locale") || "id";
+
+  // create TradingView script
+  const script = document.createElement("script");
+  script.src = "https://s3.tradingview.com/external-embedding/embed-widget-mini-symbol-overview.js";
+  script.async = true;
+  script.innerHTML = JSON.stringify({
+    symbol,
+    chartOnly,
+    dateRange,
+    noTimeScale,
+    colorTheme,
+    isTransparent: false,
+    locale,
+    width: "100%",
+    autosize: true,
+    height: "100%",
+    largeChartUrl
+  });
+
+  document.querySelector(".tradingview-widget-container__widget").appendChild(script);
+</script>
